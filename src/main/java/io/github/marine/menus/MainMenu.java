@@ -5,6 +5,8 @@ import io.github.marine.customnodes.CustomTextField;
 import io.github.marine.draggable.Draggable;
 import io.github.marine.draggable.DraggableStage;
 import io.github.marine.menus.guis.MainMenuGui;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
@@ -16,6 +18,7 @@ public final class MainMenu extends AnchorPane {
 
     private final String name;
     private final Stage stage;
+    private ScrollPane scrollPane;
 
     public MainMenu(Stage stage, String name) {
         new Scene(this);
@@ -33,9 +36,9 @@ public final class MainMenu extends AnchorPane {
 
     private void registerChildren() {
 
-        MainMenuGui gui = new MainMenuGui(this.name);
+        MainMenuGui gui = new MainMenuGui(this.name, this);
 
-        ScrollPane scrollPane = new ScrollPane(gui);
+        this.scrollPane = new ScrollPane(gui);
         scrollPane.setId("scroll-pane");
         scrollPane.getStylesheets().add("css/ScrollbarStyle.css");
         scrollPane.setPrefWidth(1280);
@@ -61,13 +64,19 @@ public final class MainMenu extends AnchorPane {
 
         search.setOnKeyPressed(event -> {
             if (event.getCode().equals(KeyCode.ENTER)) {
-                gui.getChildren().clear();
-                gui.registerChildren(search.getText());
+                Platform.runLater(() -> {
+                    gui.getChildren().clear();
+                    gui.registerChildren(search.getText());
+                });
             }
         });
 
         topBar.getChildren().add(search);
 
         this.getChildren().addAll(topBar, scrollPane);
+    }
+
+    public ScrollPane getScrollPane() {
+        return scrollPane;
     }
 }

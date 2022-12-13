@@ -1,5 +1,6 @@
 package io.github.marine.customnodes;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.layout.FlowPane;
@@ -12,6 +13,7 @@ public final class CustomStatsPane extends FlowPane {
         this.setOrientation(Orientation.HORIZONTAL);
         this.setHgap(25);
         this.setVgap(25);
+        this.setPadding(new Insets(0, 25, 0, 25));
         this.setAlignment(Pos.TOP_CENTER);
     }
 

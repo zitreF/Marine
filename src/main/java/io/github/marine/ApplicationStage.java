@@ -3,6 +3,7 @@ package io.github.marine;
 import io.github.marine.menus.MainMenu;
 import io.github.marine.menus.RegisterMenu;
 import javafx.application.Application;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -24,6 +25,7 @@ public final class ApplicationStage extends Application {
         stage.setTitle("Marine");
         stage.setWidth(450);
         stage.setHeight(600);
+        stage.getIcons().add(new Image("/assets/icons/marine.png"));
 
         File user = new File(System.getProperty("user.home")+"\\AppData\\Roaming\\Marine\\user.txt");
 

@@ -10,10 +10,14 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public final class CustomProgressField extends StackPane {
 
     private final ProgressBar progressBar;
     private final HBox values;
+    private final Text text;
 
 
     public CustomProgressField(String name, float progress, float limit, ImageView icon) {
@@ -31,13 +35,14 @@ public final class CustomProgressField extends StackPane {
         progressBar.getStylesheets().add("css/ProgressBarStyle.css");
         this.values = new HBox();
         values.setPrefSize(350, 75);
+        NumberFormat format = NumberFormat.getNumberInstance(Locale.ROOT);
 
-        Text value = new Text(String.format("%.0f/%.0f", progress, limit));
+        Text value = new Text(format.format(progress) + "/" + format.format(limit));
         value.setFont(Font.font("Arial", 20));
         value.setStyle("-fx-fill: #45464b; -fx-font-family: Arial; -fx-font-size: 20;");
         value.setTranslateY(-60);
 
-        Text text = new Text(name);
+        this.text = new Text(name);
         text.setFont(Font.font("Arial", 15));
         text.setStyle("-fx-fill: #414246; -fx-font-family: Arial; -fx-font-size: 15;");
         text.setTranslateY(-40);
@@ -50,6 +55,10 @@ public final class CustomProgressField extends StackPane {
         StackPane.setAlignment(icon, Pos.CENTER_LEFT);
 
         this.getChildren().addAll(icon, values, value, text, progressBar);
+    }
+
+    public Text getText() {
+        return text;
     }
 
     public void addNodeToHBox(Node node) {

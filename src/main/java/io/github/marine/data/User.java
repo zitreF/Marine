@@ -1,5 +1,6 @@
 package io.github.marine.data;
 
+import io.github.marine.utils.ReaderUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -12,10 +13,13 @@ public final class User {
     private final String name;
     private final long id;
     private final int level;
-    private final String alliance;
+    private final long xp;
+    private final String allianceName;
     private final String avatar;
     private final long playTime;
     private final int chipsSpent;
+    private final long coinsSpent;
+    private final long mineralsSpent;
     private final int coloniesMoved;
     private final int giftsSent;
     private final int starbasesDestroyed;
@@ -25,7 +29,9 @@ public final class User {
     private final int friendsHelped;
     private final int obstaclesRecycled;
     private final int troopsDonated;
+    private final int giftsReceived;
     private final List<Planet> planets;
+    private Alliance alliance;
 
     public User(String result, String statsResult) {
         JSONObject json = new JSONObject(result);
@@ -33,7 +39,12 @@ public final class User {
         this.name = json.getString("Name");
         this.id = json.getLong("Id");
         this.level = json.getInt("Level");
-        this.alliance = json.isNull("AllianceId") ? "No clan" : json.getString("AllianceId");
+        this.xp = json.getLong("Experience");
+        this.allianceName = json.isNull("AllianceId") ? "No clan" : json.getString("AllianceId");
+
+        if (!allianceName.equals("No clan")) {
+            this.alliance = new Alliance(ReaderUtil.readFromWebsite("https://api.galaxylifegame.net/alliances/get?name=" + allianceName));
+        }
 
         this.planets = new ArrayList<>();
 
@@ -50,6 +61,8 @@ public final class User {
 
         this.playTime = stats.getLong("TotalPlayTimeInMs");
         this.chipsSpent = stats.getInt("ChipsSpent");
+        this.coinsSpent = stats.getLong("CoinsSpent");
+        this.mineralsSpent = stats.getLong("MineralsSpent");
         this.coloniesMoved = stats.getInt("ColoniesMoved");
         this.giftsSent = stats.getInt("GiftsSent");
         this.starbasesDestroyed = stats.getInt("StarbasesDestroyed");
@@ -59,6 +72,7 @@ public final class User {
         this.friendsHelped = stats.getInt("FriendsHelped");
         this.obstaclesRecycled = stats.getInt("ObstaclesRecycled");
         this.troopsDonated = stats.getInt("TroopSizesDonated");
+        this.giftsReceived = stats.getInt("GiftsReceived");
     }
 
     public String getName() {
@@ -73,8 +87,8 @@ public final class User {
         return level;
     }
 
-    public String getAlliance() {
-        return alliance;
+    public String getAllianceName() {
+        return allianceName;
     }
 
     public String getAvatar() {
@@ -135,5 +149,25 @@ public final class User {
 
     public int getUsedNukes() {
         return this.nukesUsed;
+    }
+
+    public long getCoinsSpent() {
+        return this.coinsSpent;
+    }
+
+    public long getMineralsSpent() {
+        return this.mineralsSpent;
+    }
+
+    public int getGiftsReceived() {
+        return giftsReceived;
+    }
+
+    public long getXp() {
+        return xp;
+    }
+
+    public Alliance getAlliance() {
+        return this.alliance;
     }
 }
